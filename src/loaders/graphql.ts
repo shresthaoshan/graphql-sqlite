@@ -6,14 +6,15 @@ import {
 } from "apollo-server-core";
 import { buildSchema } from "type-graphql";
 
-import { UserResolver } from "../modules/user/user.resolver";
 import { CustomError } from "../utils/CustomError";
+import { UserResolver } from "../modules/user/user.resolver";
+import { AuthResolver } from "../modules/auth/auth.resolver";
 
 export const initGraphQl = async (app: Express): Promise<void> => {
 	console.log("GRAPHQL:: Configuring...");
 
 	const schema = await buildSchema({
-		resolvers: [UserResolver],
+		resolvers: [UserResolver, AuthResolver],
 		emitSchemaFile: false,
 	});
 

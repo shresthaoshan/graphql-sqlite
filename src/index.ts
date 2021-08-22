@@ -1,4 +1,5 @@
 import "reflect-metadata";
+import "./config";
 import * as express from "express";
 import { version } from "../package.json";
 import { initGraphQl } from "./loaders/graphql";
