@@ -15,6 +15,8 @@ export class UserDomain {
 		return this.entity.find();
 	}
 	create(user: User) {
+		if (user.phone.length !== 10)
+			throw new Error("Phone number should be of 10 digits.");
 		return this.entity
 			.create({ ...user, password: hashPassword(user.password) })
 			.save();
