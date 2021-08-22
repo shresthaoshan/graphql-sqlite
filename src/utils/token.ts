@@ -14,4 +14,18 @@ const generateToken = (payload: any) => {
 
 const verifyToken = (token: string) => jwt.verify(token, envs.TOKEN_SECRET);
 
-export default { generateToken, verifyToken };
+const validateToken = (token: string) => {
+	if (!token) throw new Error("Access denied!!! Auth token required.");
+
+	const [tokenType, tkn] = token.split(" ");
+
+	if (tokenType !== "Bearer")
+		throw new Error("Access denied!!! Invalid token type.");
+
+	if (tkn.split(".").length !== 3)
+		throw new Error("Access denied!!! Invalid token.");
+
+	return tkn;
+};
+
+export default { generateToken, verifyToken, validateToken };

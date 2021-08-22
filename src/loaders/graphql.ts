@@ -7,6 +7,8 @@ import {
 import { buildSchema } from "type-graphql";
 
 import { CustomError } from "../utils/CustomError";
+import { authChecker } from "../modules/auth/auth.checker";
+
 import { UserResolver } from "../modules/user/user.resolver";
 import { AuthResolver } from "../modules/auth/auth.resolver";
 
@@ -16,6 +18,7 @@ export const initGraphQl = async (app: Express): Promise<void> => {
 	const schema = await buildSchema({
 		resolvers: [UserResolver, AuthResolver],
 		emitSchemaFile: false,
+		authChecker,
 	});
 
 	const graphql = new ApolloServer({
@@ -24,6 +27,12 @@ export const initGraphQl = async (app: Express): Promise<void> => {
 			ApolloServerPluginLandingPageDisabled(),
 			ApolloServerPluginLandingPageGraphQLPlayground(),
 		],
+		context: ({ req }) => {
+			let ctx: any = { req };
+			const token = req?.headers?.authorization || null;
+			if (token) ctx = { ...ctx, token };
+			return ctx;
+		},
 		formatError: (err) => {
 			return new CustomError(err);
 		},
